@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Family Films</title>
+        <link rel="icon" href="/ardnscr-logo.ico">
+
+    <!-- stylesheets -->
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <!-- nav bar -->
+    <body>
+        <div class="flex-container">
+                <img height="300px" width="500px"src="/familyfilms.png">
+        </div> 
+
+    <!-- header -->
+        <main>
+            <div class="search-container">
+                <h2> SEARCH:</h2>
+                <input type="text" id="searchInput" class="terminal-input">
+            </div>
+
+        <div class="location-tabs">
+            <button class="location-btn active" data-location="all">All Locations</button>
+            <button class="location-btn" data-location="Heidi">Heidi</button>
+            <button class="location-btn" data-location="Kat">Kat</button>
+            <button class="location-btn" data-location="Loui">Loui</button>
+        </div>
+
+        <!-- Movie Table -->
+        <div class="results-container">
+        <h3 id="currentLocationHeader">CATALOG: ALL LOCATIONS</h3>
+        <table class="movie-table">
+            <thead>
+                <tr>
+                    <th>TITLE</th>
+                    <th>YEAR</th>
+                    <th>LOCATION</th>
+                    <th>STUDIO</th>
+                    <th>ANIMATED</th>
+                </tr>
+            </thead>
+            <tbody id="movieList">
+                    <!-- Dynamic Rows Inserted Here -->
+                </tbody>
+            </table>
+            <p id="noResults" style="display: none; padding: 15px; color: var(--accent-color);">*** NO VHS TAPES FOUND MATCHING QUERY ***</p>
+        </div>
+        </main>
+            
+    </body>
+    <script src="nav.js"></script>
+    <script src="app.js?=v2"></script>
+</html>
