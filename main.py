@@ -14,10 +14,10 @@ app.add_middleware(
 
 CONNECTION_STRING = (
     "DRIVER={ODBC Driver 18 for SQL Server};"
-    "SERVER=192.168.0.52;" 
-    "DATABASE=FamilyFilms;"
-    "UID=sa;"
-    "PWD=Password1;"
+    "SERVER=x.x.x.x;" 
+    "DATABASE=FilmsDB;"
+    "UID=user;"
+    "PWD=Password123;"
     "TrustServerCertificate=yes;"
     "Encrypt=no;" 
 )
