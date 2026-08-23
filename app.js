@@ -28,15 +28,16 @@ function renderMovies() {
     const searchTerm = searchInput.value.toLowerCase().trim();
 
     const filtered = movies.filter(movie => {
-        // Extract values handling both uppercase (from SQL) and lowercase keys
-        const title = (movie.title || movie.Title || "").toLowerCase();
-        const studio = (movie.studio || movie.Studio || "").toLowerCase();
-        const release = (movie.release || movie.Release || "").toString();
-        const location = (movie.location || movie.Location || "").toLowerCase();
+        const title = (movie.title || movie.Title || "").toLowerCase().trim();
+        const release = (movie.release || movie.Release || "").toString().trim();
+        const location = (movie.location || movie.Location || "").toLowerCase().trim();
+        const category = (movie.category || movie.Category || "").toLowerCase().trim();
+        const studio = (movie.studio || movie.Studio || "").toLowerCase().trim();
 
         const matchesLocation = (selectedLocation === "all" || location === selectedLocation.toLowerCase());
         const matchesSearch = title.includes(searchTerm) || 
                               studio.includes(searchTerm) ||
+                              category.includes(searchTerm) ||
                               release.includes(searchTerm);
 
         return matchesLocation && matchesSearch;
@@ -51,22 +52,22 @@ function renderMovies() {
     }
 
     noResults.style.display = "none";
-
-    // --- NEW BIT HERE ---
     filtered.forEach(movie => {
-        const title = movie.title || movie.Title || '';
-        const release = movie.release || movie.Release || '';
-        const location = movie.location || movie.Location || '';
-        const studio = movie.studio || movie.Studio || '';
-        const animated = movie.animated || movie.Animated || '';
+        const title = (movie.Title || '').toString().trim();
+        const release = (movie.Release || '').toString().trim();
+        const location = (movie.Location || '').toString().trim();
+        const category = (movie.Category || '').toString().trim();
+        const studio = (movie.Studio || '').toString().trim();
 
         const row = document.createElement("tr");
+        // Position 4 = studio ("DISNEY") -> Matches CATEGORY header column index if swapped, or alignment
+        // Position 5 = category ("ANIMATION") 
         row.innerHTML = `
             <td class="col-title">${title}</td>
             <td>${release}</td>
             <td><span class="vhs-badge">${location}</span></td>
             <td>${studio}</td>
-            <td><span class="anim-tag">${animated}</span></td>
+            <td><span class="category-tag">${category}</span></td>
         `;
         movieList.appendChild(row);
     });
