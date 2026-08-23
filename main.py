@@ -38,26 +38,28 @@ def get_movies():
     
     cursor = conn.cursor()
     
+    # Query raw columns directly without RTRIM expressions in the SELECT clause
     query = """
-        SELECT 
-            MovieID, 
-            RTRIM(Title) as Title, 
-            Release, 
-            RTRIM(Animated) as Animated, 
-            RTRIM(Location) as Location, 
-            RTRIM(Studio) as Studio
+        SELECT MovieID, Title, Release, Location, Category, Studio
         FROM Movies
         ORDER BY Title ASC
     """
     
     try:
         cursor.execute(query)
-        columns = [column[0] for column in cursor.description]
         rows = cursor.fetchall()
         
         results = []
         for row in rows:
-            results.append(dict(zip(columns, row)))
+            # Map index positions directly and handle string stripping safely in Python
+            results.append({
+                "MovieID": row[0],
+                "Title": str(row[1]).strip() if row[1] else "",
+                "Release": row[2],
+                "Location": str(row[3]).strip() if row[3] else "",
+                "Category": str(row[4]).strip() if row[4] else "",
+                "Studio": str(row[5]).strip() if row[5] else ""
+            })
             
         return results
         
