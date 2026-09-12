@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Runtime.Remoting.Lifetime;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -11,24 +12,25 @@ namespace FamilyFilmsMgmtApp
     internal class Program
     {
         static string connString = @"Server=192.168.0.52,1433;Database=FamilyFilms;User Id=sa;Password=Password1;TrustServerCertificate=True;";
+
         static void Main(string[] args)
         {
             bool running = true;
 
             while (running)
             {
-
                 Console.Clear();
                 Console.Write("\x1b[3J\x1b[H\x1b[2J");
                 Console.Clear();
-                Console.WriteLine("               FamilyFilms Management App");
+                Console.WriteLine("                FamilyFilms Management App");
                 Console.WriteLine(" ");
-                Console.WriteLine($"                --- CREATION MENU ---");
+                Console.WriteLine($"                  ---  MENU ---");
                 Console.WriteLine("======================================================");
                 Console.WriteLine($"SYSTEM TIME: {DateTime.Now:dd/MM/yyyy HH:mm} | STATUS: OPERATIONAL");
                 Console.WriteLine("======================================================");
-                Console.WriteLine(" [1] Show All Movies          [3] Add Movies in bulk");
-                Console.WriteLine(" [2] Add Movies               [4] Delete Movies");
+                Console.WriteLine(" [1] Show All Movies          [4] Add Movies in bulk");
+                Console.WriteLine(" [2] Add Movies               [5] Delete Movies");
+                Console.WriteLine(" [3] Movie Search");
                 Console.WriteLine(" ");
                 Console.WriteLine(" [0] Exit App");
                 Console.WriteLine("======================================================");
@@ -44,14 +46,16 @@ namespace FamilyFilmsMgmtApp
                         AddNewMovie();
                         break;
                     case "3":
-                        AddMoviesBulk();
+                        MovieSearch();
                         break;
                     case "4":
+                        AddMoviesBulk();
+                        break;
+                    case "5":
                         DeleteMovies();
                         break;
-                        return; // returns to Main Menu
                     case "0":
-                        Environment.Exit(0); // exits app
+                        Environment.Exit(0);
                         break;
                     default:
                         Console.WriteLine("Invalid option. Try again..");
@@ -61,23 +65,22 @@ namespace FamilyFilmsMgmtApp
             }
         }
 
-        // delete this when code is fixed 
         static void ShowMovies()
         {
             Console.Clear();
             Console.Write("\x1b[3J\x1b[H\x1b[2J");
             Console.Clear();
             Console.WriteLine("              --- Show All Movies ---");
-            Console.WriteLine("=====================================================================================================");
-            Console.WriteLine(" Title                                             | Year | Anim. | Location   | Studio");
-            Console.WriteLine("-----------------------------------------------------------------------------------------------------");
+            Console.WriteLine("===========================================================================================================");
+            Console.WriteLine(" Title                                             | Year | Location  | Category | Studio");
+            Console.WriteLine("-----------------------------------------------------------------------------------------------------------");
 
             using (SqlConnection connection = new SqlConnection(connString))
             {
                 try
                 {
                     connection.Open();
-                    string sql = @"SELECT Title, Release, Animated, Location, Studio 
+                    string sql = @"SELECT Title, Release, Category, Location, Studio 
                                    FROM [FamilyFilms].[dbo].[Movies] 
                                    ORDER BY Title ASC;";
 
@@ -88,11 +91,11 @@ namespace FamilyFilmsMgmtApp
                         {
                             string title = reader["Title"].ToString().Trim();
                             string release = reader["Release"].ToString();
-                            string animated = reader["Animated"].ToString().Trim();
                             string location = reader["Location"].ToString().Trim();
+                            string category = reader["Category"].ToString().Trim();
                             string studio = reader["Studio"].ToString().Trim();
 
-                            Console.WriteLine($"{title.PadRight(50)} | {release} | {animated.PadRight(5)} | {location.PadRight(10)} | {studio}");
+                            Console.WriteLine($"{title.PadRight(50)} | {release} | {location.PadRight(10)} | {category.PadRight(15)}  | {studio}");
                         }
                     }
                 }
@@ -103,7 +106,7 @@ namespace FamilyFilmsMgmtApp
             }
 
             Console.WriteLine(" ");
-            Console.WriteLine("==============================================================");
+            Console.WriteLine("===========================================================================================================");
             Console.WriteLine("Press any key to go back...");
             Console.ReadKey();
         }
@@ -129,8 +132,8 @@ namespace FamilyFilmsMgmtApp
                 return;
             }
 
-            Console.Write("Animated (y/n): ");
-            string animated = Console.ReadLine()?.Trim();
+            Console.Write("Category (e.g., Animated, Live-Action): ");
+            string category = Console.ReadLine()?.Trim();
 
             Console.Write("Location: ");
             string location = Console.ReadLine()?.Trim();
@@ -143,15 +146,15 @@ namespace FamilyFilmsMgmtApp
                 try
                 {
                     connection.Open();
-                    string insertSql = @"INSERT INTO [FamilyFilms].[dbo].[Movies] (Title, Release, Animated, Location, Studio) 
-                                         VALUES (@Title, @Release, @Animated, @Location, @Studio);";
+                    string insertSql = @"INSERT INTO [FamilyFilms].[dbo].[Movies] (Title, Release, Location, Category, Studio) 
+                                         VALUES (@Title, @Release, @Location, @Category, @Studio);";
 
                     using (SqlCommand cmd = new SqlCommand(insertSql, connection))
                     {
                         cmd.Parameters.AddWithValue("@Title", title);
                         cmd.Parameters.AddWithValue("@Release", release);
-                        cmd.Parameters.AddWithValue("@Animated", animated);
                         cmd.Parameters.AddWithValue("@Location", location);
+                        cmd.Parameters.AddWithValue("@Category", category);
                         cmd.Parameters.AddWithValue("@Studio", studio);
 
                         int rows = cmd.ExecuteNonQuery();
@@ -173,17 +176,66 @@ namespace FamilyFilmsMgmtApp
             Console.ReadKey();
         }
 
+        static void MovieSearch()
+        {
+            Console.Clear();
+            Console.Write("\x1b[3J\x1b[H\x1b[2J");
+            Console.Clear();
+            Console.WriteLine("                --- Movie Search ---");
+            Console.WriteLine("============ ============ ============ ============");
+            Console.WriteLine(" search Movies with only a part of the name needed");
+            Console.WriteLine(" Example: 'Lion' for The Lion King");
+            Console.WriteLine("----------------------------------------------------");
+
+            using (SqlConnection connection = new SqlConnection(connString))
+            {
+                try
+                {
+                    connection.Open();
+                    string sql = @"
+                        SELECT Title, Release, Category, Location, Studio 
+                        FROM [FamilyFilms].[dbo].[Movies]
+                        where Title like '%' + @search + '%'
+                        order by Release asc";
+                    using (SqlCommand cmd = new SqlCommand(sql, connection))
+                    {
+                        Console.Write("Enter movie title to search: ");
+                        string searchTerm = Console.ReadLine();
+                        cmd.Parameters.AddWithValue("@search", searchTerm);
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                string title = reader["Title"].ToString().Trim();
+                                int release = int.Parse(reader["Release"].ToString().Trim());
+                                string location = reader["Location"].ToString().Trim();
+                                string category = reader["Category"].ToString().Trim();
+                                string studio = reader["Studio"].ToString().Trim();
+
+                                Console.WriteLine($"{title.PadRight(50)} | {release} | {location.PadRight(10)} | {category.PadRight(15)}  | {studio}");
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex) { Console.WriteLine("Error: " + ex.Message); }
+            }
+            Console.WriteLine(" ");
+            Console.WriteLine("============ ============ ============ ============");
+            Console.WriteLine("Press any key to go back...");
+            Console.ReadKey();
+        }
+
         static void AddMoviesBulk()
         {
             Console.Clear();
             Console.Write("\x1b[3J\x1b[H\x1b[2J");
-            Console.WriteLine("              --- Bulk Add New Movies ---");
-            Console.WriteLine("=======================================================");
+            Console.WriteLine("               --- Bulk Add New Movies ---");
+            Console.WriteLine("=================================================================");
             Console.WriteLine(" --- Paste SQL-Style Values (Multiple Lines) ---");
-            Console.WriteLine(" Format: ('Title', Release, 'Animated', 'Location', 'Studio'),");
-            Console.WriteLine(" Example: ('Bambi', 1942, 'y', 'Shelf A', 'Disney'),");
+            Console.WriteLine(" Format: ('Title', Release, 'Location', 'Category', 'Studio'),");
+            Console.WriteLine(" Example: ('Bambi', 1942, 'Shelf A', 'Animated', 'Disney'),");
             Console.WriteLine(" Add movies and press ENTER on a blank line to finish:");
-            Console.WriteLine("-------------------------------------------------------");
+            Console.WriteLine("-----------------------------------------------------------------");
 
             StringBuilder sb = new StringBuilder();
             string line;
@@ -195,8 +247,8 @@ namespace FamilyFilmsMgmtApp
 
             string input = sb.ToString();
 
-            // Regex matches: ('Title', Release, 'Animated', 'Location', 'Studio')
-            string pattern = @"\(\s*'(?<Title>.+?)'\s*,\s*(?<Release>\d+)\s*,\s*'(?<Animated>.+?)'\s*,\s*'(?<Location>.+?)'\s*,\s*'(?<Studio>.+?)'\s*\)";
+            // Regex matches: ('Title', Release, 'Location', 'Category', 'Studio')
+            string pattern = @"\(\s*'(?<Title>.+?)'\s*,\s*(?<Release>\d+)\s*,\s*'(?<Location>.+?)'\s*,\s*'(?<Category>.+?)'\s*,\s*'(?<Studio>.+?)'\s*\)";
             MatchCollection matches = Regex.Matches(input, pattern, RegexOptions.Singleline);
 
             if (matches.Count == 0)
@@ -217,19 +269,19 @@ namespace FamilyFilmsMgmtApp
                     {
                         string title = match.Groups["Title"].Value.Trim();
                         int release = int.Parse(match.Groups["Release"].Value.Trim());
-                        string animated = match.Groups["Animated"].Value.Trim();
                         string location = match.Groups["Location"].Value.Trim();
+                        string category = match.Groups["Category"].Value.Trim();
                         string studio = match.Groups["Studio"].Value.Trim();
 
-                        string insertSql = @"INSERT INTO [FamilyFilms].[dbo].[Movies] (Title, Release, Animated, Location, Studio) 
-                                             VALUES (@Title, @Release, @Animated, @Location, @Studio)";
+                        string insertSql = @"INSERT INTO [FamilyFilms].[dbo].[Movies] (Title, Release, Location, Category, Studio) 
+                                             VALUES (@Title, @Release, @Location, @Category, @Studio)";
 
                         using (SqlCommand insertCmd = new SqlCommand(insertSql, connection))
                         {
                             insertCmd.Parameters.AddWithValue("@Title", title);
                             insertCmd.Parameters.AddWithValue("@Release", release);
-                            insertCmd.Parameters.AddWithValue("@Animated", animated);
                             insertCmd.Parameters.AddWithValue("@Location", location);
+                            insertCmd.Parameters.AddWithValue("@Category", category);
                             insertCmd.Parameters.AddWithValue("@Studio", studio);
 
                             insertCmd.ExecuteNonQuery();
