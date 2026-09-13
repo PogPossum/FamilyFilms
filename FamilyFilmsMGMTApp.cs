@@ -11,7 +11,7 @@ namespace FamilyFilmsMgmtApp
 {
     internal class Program
     {
-        static string connString = @"Server=192.168.0.52,1433;Database=FamilyFilms;User Id=sa;Password=Password1;TrustServerCertificate=True;";
+        static string connString = @"Server=x.x.x.x,1433;Database=MovieDB;User Id=User;Password=Password1;TrustServerCertificate=True;";
 
         static void Main(string[] args)
         {
