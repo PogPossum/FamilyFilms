@@ -28,6 +28,7 @@ values
 ('Vejen Til El Dorado', 2000, 'Loui', 'Animation', 'Dreamworks'),
 ('Mulan', 1998, 'Loui', 'Animation', 'Disney'),
 ('Mulan 2', 2004, 'Loui', 'Animation', 'Disney'),
+('Olsen Banden Jubilæums Samling', 2006, 'Loui', 'Dansk', 'Nordisk Film'),
 
 --kat movie list:
 ('Bambi', 1942, 'Kat', 'Animation', 'Disney'),
@@ -98,7 +99,7 @@ values
 ('Monsters mod Aliens', 2009, 'Heidi', 'Animation', 'Dreamworks'),
 ('Shreklig Jul', 2007, 'Heidi', 'Animation', 'Dreamworks'),
 ('Sådan træner du din drage', 2010, 'Heidi', 'Animation', 'Dreamworks'),
-('Alice i Eventyrland', 1951, 'Heidi', 'Live Action', 'Disney'),
+('Alice i Eventyrland', 2010, 'Heidi', 'Live Action', 'Disney'),
 ('De Utrolige', 2004, 'Heidi', 'Animation', 'Pixar'),
 ('Oliver & Co', 1988, 'Heidi', 'Animation', 'Disney'),
 ('De Frygtløse - The Muuhvie', 2004, 'Heidi', 'Animation', 'Disney'),
@@ -108,7 +109,7 @@ values
 ('Snehvide og de syv små dværge', 1937, 'Heidi', 'Animation', 'Disney'),
 ('Ratatouille', 2007, 'Heidi', 'Animation', 'Pixar'),
 ('Mads og Mikkel', 1981, 'Heidi', 'Animation', 'Disney'),
-('Herkules', 1997, 'Heidi', 'Animation', 'Disney'); 
+('Herkules', 1997, 'Heidi', 'Animation', 'Disney');  
 --
 select * from Movies
 order by Title Asc;
