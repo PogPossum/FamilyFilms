@@ -37,7 +37,7 @@ values
 ('Lady og Vagabonden', 1955, 'Kat', 'Animation', 'Disney'),
 ('Lady og Vagabonden 2', 2001, 'Kat', 'Animation', 'Disney'),
 ('Tornerose', 1959, 'Kat', 'Animation', 'Disney'),
-('101 Dalmatiner', 1961, 'Kat', 'Animation', 'Disney'),
+('101 Dalmatinere', 1961, 'Kat', 'Animation', 'Disney'),
 ('Aristocats', 1970, 'Kat', 'Animation', 'Disney'),
 ('Bernard og Bianca', 1977, 'Kat', 'Animation', 'Disney'),
 ('Bernard og Bianca sos fra Australien', 1990, 'Kat', 'Animation', 'Disney'),
@@ -89,7 +89,26 @@ values
 ('Stor Ståhaj', 2004, 'Heidi', 'Animation', 'Dreamworks'),
 ('Sværdet i Stenen', 1963, 'Heidi', 'Animation', 'Disney'),
 ('Shrek', 2001, 'Heidi', 'Animation', 'Dreamworks'),
-('Mary Poppins Returns', 2018, 'Heidi', 'Live Action', 'Disney');
+('Mary Poppins Returns', 2018, 'Heidi', 'Live Action', 'Disney'),
+
+('101 Dalmatinere', 1961, 'Heidi', 'Animation', 'Disney'),
+('Vilde Rolf', 2006, 'Heidi', 'Animation', 'Disney'),
+('Peter Plys - Jagten på den forsvundne Jakob', 1997, 'Heidi', 'Animation', 'Disney'),
+('Dumbo', 1941, 'Heidi', 'Animation', 'Disney'),
+('Monsters mod Aliens', 2009, 'Heidi', 'Animation', 'Dreamworks'),
+('Shreklig Jul', 2007, 'Heidi', 'Animation', 'Dreamworks'),
+('Sådan træner du din drage', 2010, 'Heidi', 'Animation', 'Dreamworks'),
+('Alice i Eventyrland', 1951, 'Heidi', 'Live Action', 'Disney'),
+('De Utrolige', 2004, 'Heidi', 'Animation', 'Pixar'),
+('Oliver & Co', 1988, 'Heidi', 'Animation', 'Disney'),
+('De Frygtløse - The Muuhvie', 2004, 'Heidi', 'Animation', 'Disney'),
+('Monsters, Inc.', 2001, 'Heidi', 'Animation', 'Pixar'),
+('Kejserens Nye Flip', 2000, 'Heidi', 'Animation', 'Disney'),
+('Askepot II - Drømmen bliver til virkelighed', 2002, 'Heidi', 'Animation', 'Disney'),
+('Snehvide og de syv små dværge', 1937, 'Heidi', 'Animation', 'Disney'),
+('Ratatouille', 2007, 'Heidi', 'Animation', 'Pixar'),
+('Mads og Mikkel', 1981, 'Heidi', 'Animation', 'Disney'),
+('Herkules', 1997, 'Heidi', 'Animation', 'Disney'); 
 --
 select * from Movies
 order by Title Asc;
